@@ -1,3 +1,4 @@
+import { products } from "@/components/data/products";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -60,11 +61,11 @@ export default function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>{i}</TableCell>
-                <TableCell>Produto {i}</TableCell>
-                <TableCell>R$ 192,00</TableCell>
+            {products.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.id}</TableCell>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.price.toLocaleString('pt-BR', { style: "currency", currency: "BRL" })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
