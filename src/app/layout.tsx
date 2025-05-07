@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
+import { Providers } from "./provider";
 
 
 
@@ -13,10 +14,18 @@ interface RootLayoutProps {
   children: ReactNode
 }
 export default function RootLayout({ children }: RootLayoutProps) {
+
+
   return (
     <html lang="en">
       <body>
-        {children}
+
+        <Providers>
+          {children}
+
+        </Providers>
+
+
       </body>
     </html>
   );

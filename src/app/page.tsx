@@ -1,25 +1,25 @@
-import { products } from "@/components/data/products";
+'use client'
+
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { Search, PlusCircle } from 'lucide-react';
+import { useQuery } from "@tanstack/react-query";
+import { PlusCircle } from 'lucide-react';
+import { getProducts } from "@/components/data/products";
+import ProductsFilters from "@/components/products-filters";
+import { CreateProductDialog } from "@/components/create-product-dialog";
 
 export default function Home() {
+  const { data: products } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  })
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4">
       <h1 className="text-4xl font-bold">Produtos</h1>
       <div className="flex items-center justify-between">
-        <form className="flex items-center gap-2">
-          <Input name="id" placeholder="Id do Pedido" className="w-auto" />
-          <Input name="name" placeholder="Nome do Pedido" className="w-auto" />
-          <Button type="submit" variant="link">
-            <Search className="h-4 w-auto mr-2" />
-            Filtrar
-          </Button>
-        </form>
+        <ProductsFilters />
         <Dialog>
           <DialogTrigger asChild>
             <Button>
@@ -27,28 +27,7 @@ export default function Home() {
               Novo Produto
             </Button>
           </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Produto</DialogTitle>
-              <DialogDescription>Tela para novo produto</DialogDescription>
-            </DialogHeader>
-            <form className="space-y-6">
-              <div className=" grid grid-cols-6 items-center text-right gap-3">
-                <Label htmlFor="name">Produto</Label>
-                <Input className="col-span-3" id="name" />
-              </div>
-              <div className=" grid grid-cols-6 items-center text-right gap-3">
-                <Label htmlFor="price">Preço</Label>
-                <Input className="col-span-3" id="price" />
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline"> Cancelar </Button>
-                </DialogClose>
-                <Button type="submit" > Salvar </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
+          <CreateProductDialog />
         </Dialog>
       </div>
       <div className="border rounded-lg p-2">
@@ -58,15 +37,19 @@ export default function Home() {
               <TableHead>ID</TableHead>
               <TableHead>Produto</TableHead>
               <TableHead>Preço</TableHead>
+              <TableHead>Criado em</TableHead>
+              <TableHead>Ultima atualização</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
+            {products?.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>{product.id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price.toLocaleString('pt-BR', { style: "currency", currency: "BRL" })}</TableCell>
-              </TableRow>
+                <TableCell>{product.nome}</TableCell>
+                <TableCell>{"R$ "+product.preco}</TableCell>
+                <TableCell>{product.created_at}</TableCell>
+                <TableCell>{product.updated_at}</TableCell>
+          </TableRow>
             ))}
           </TableBody>
         </Table>
