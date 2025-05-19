@@ -10,24 +10,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  PlusCircle,
-} from "lucide-react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {  PlusCircle } from "lucide-react";
 import { getProducts } from "@/components/data/products";
 import ProductsFilters from "@/components/products-filters";
 import { CreateProductDialog } from "@/components/create-product-dialog";
-import { Label } from "@/components/ui/label";
 import Pagination from "@/components/pagination";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  const page = Number(searchParams.get("page")) || 1;
+  
+
   const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", page],
+    queryFn: () => getProducts(page),
+    placeholderData: keepPreviousData,
   });
 
   return (
