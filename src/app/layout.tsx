@@ -22,7 +22,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         <Providers>
           {children}
-
         </Providers>
 
 
